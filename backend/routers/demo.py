@@ -5,7 +5,7 @@ GET /demo — Pre-computed Demo DealReport
 ------------------------------------------
 Returns a cached, pre-computed DealReport for recruiter and demo access.
 No authentication required — this is deliberately public so anyone
-(recruiters, interviewers, portfolio viewers) can see the full product
+(anyone curious about the product) can see the full
 experience without signing up.
 
 How the cache works:

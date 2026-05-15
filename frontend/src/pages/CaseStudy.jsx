@@ -51,8 +51,8 @@ export default function CaseStudy() {
             <p style={styles.eyebrow}>Case Study</p>
             <h1 style={styles.heroTitle}>LemonCheck</h1>
             <p style={styles.heroSub}>
-              An AI-powered used car deal analyzer built as a portfolio piece
-              for a Solutions Engineer job search. Here's the full story.
+              An AI-powered used car deal analyzer. Here's how it was built,
+              why each decision was made, and what comes next.
             </p>
             <Link to="/analysis?demo=true" style={styles.heroBtn}>
               See it in action →
@@ -122,7 +122,7 @@ export default function CaseStudy() {
                 <tbody>
                   {[
                     ['AI Model', 'Claude Sonnet 4', 'Best balance of speed and structured JSON output for this use case. Haiku is cheaper but less reliable on complex analysis; Opus is slower than needed.'],
-                    ['Integration Pattern', 'MCP tool orchestration', 'Mirrors how enterprise AI integrations actually work — not just prompt-in, answer-out. Demonstrates understanding of agent patterns that matter to real SE interviews.'],
+                    ['Integration Pattern', 'MCP tool orchestration', 'Mirrors how enterprise AI integrations actually work — not just prompt-in, answer-out. Clean separation between data gathering and reasoning, with independently debuggable steps.'],
                     ['Backend', 'Python FastAPI', 'Async-first, Pydantic native, well-documented. Deploys easily to Railway. The Python ecosystem also has the best libraries for the scraping + AI work.'],
                     ['Frontend', 'React + Vite', "Fast dev experience, excellent ecosystem, most likely to match the hiring company's stack. Vite's HMR makes iteration fast."],
                     ['Auth', 'Supabase magic link', 'Zero password management burden. One-click sign-in via email means real users actually complete it. Service role key handles RLS bypass for backend writes.'],
@@ -155,11 +155,10 @@ export default function CaseStudy() {
               touching the prompt or the business logic.
             </p>
             <p>
-              More importantly for a portfolio piece: MCP is where enterprise AI
-              deployments are headed. Every serious SE role I was targeting was either
-              already using it or evaluating it. Knowing how to design MCP tool schemas,
-              handle tool call loops, and manage failure modes (tools that time out, APIs
-              that go down) is exactly the kind of hands-on knowledge that shows in interviews.
+              More importantly: MCP is where enterprise AI deployments are headed.
+              Knowing how to design MCP tool schemas, handle tool call loops, and manage
+              failure modes (tools that time out, APIs that go down) is exactly the kind
+              of hands-on knowledge that shows in technical conversations.
             </p>
             <p>
               The two-step chain — enrichment loop first, analysis call second — is
@@ -205,23 +204,19 @@ export default function CaseStudy() {
           {/* ── About ───────────────────────────────────────────── */}
           <Section id="about" label="06 — About the Builder">
             <p>
-              Kevin Torres. I've spent years in AV integration — commissioning systems,
-              managing large-scale installs, and sitting across the table from clients
-              who needed someone to translate technical complexity into plain English.
-              I'm transitioning into AI/ML Solutions Engineering because the tools finally
-              caught up to the problems I care about solving.
-            </p>
-            <p>
-              LemonCheck is one demonstration of that transition: real tech stack, real
-              API integrations, real user problem. If you're reading this on a hiring
-              loop, I'd love to talk.
+              Kevin Torres. I build things that make complex information easy to act on —
+              LemonCheck is a clean example of that. Real tech stack, real API integrations,
+              real user problem. If you're curious about the work, I'd love to talk.
             </p>
             <div style={styles.aboutLinks}>
-              <a href="https://linkedin.com/in/kevinatorres" target="_blank" rel="noopener noreferrer" style={styles.aboutLink}>
-                LinkedIn →
+              <a href="mailto:karbonlabs01@gmail.com" style={styles.aboutLink}>
+                karbonlabs01@gmail.com →
               </a>
               <a href="mailto:specsvisuals@gmail.com" style={styles.aboutLink}>
-                Email →
+                specsvisuals@gmail.com →
+              </a>
+              <a href="https://linkedin.com/in/kevinatorres" target="_blank" rel="noopener noreferrer" style={styles.aboutLink}>
+                LinkedIn →
               </a>
               <Link to="/" style={styles.aboutLink}>
                 Try LemonCheck →

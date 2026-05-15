@@ -8,7 +8,7 @@ Compares LemonCheck grades/price_deltas against:
   - Carfax/AutoCheck reports for flagged vehicles
 
 Produces an accuracy report: how often did red flags correlate with real issues?
-Useful for prompt tuning and for demonstrating product quality to interviewers.
+Useful for prompt tuning and demonstrating product quality.
 
 Usage:
   python scripts/check_accuracy.py

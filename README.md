@@ -206,8 +206,4 @@ Read the full case study (including architectural decisions and what I'd build n
 
 ## Built By
 
-**Kevin Torres** — [LinkedIn](https://linkedin.com/in/kevinatorres) · [specsvisuals@gmail.com](mailto:specsvisuals@gmail.com)
-
-AV → AI transition. Solutions Engineer job search, 2025.
-
-> *Built to get hired. Designed to actually help people.*
+**Kevin Torres** — [karbonlabs01@gmail.com](mailto:karbonlabs01@gmail.com) · [specsvisuals@gmail.com](mailto:specsvisuals@gmail.com) · [LinkedIn](https://linkedin.com/in/kevinatorres)

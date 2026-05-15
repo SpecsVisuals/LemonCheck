@@ -3,7 +3,7 @@
 > LemonCheck — Key Technical Decisions
 > 
 > Each ADR follows the format: **Context → Decision → Consequences**.
-> These are written to be read aloud in an engineering interview.
+> Each ADR explains the context, the choice made, and the trade-offs accepted.
 
 ---
 
@@ -52,7 +52,7 @@ Structured DealReport JSON
 
 2. **Debuggability.** Because data gathering and reasoning are separate steps, a bad analysis can be diagnosed without re-running the whole chain. Check the enrichment output first; if the data is good, the prompt is the problem.
 
-3. **Closer to production patterns.** Real enterprise AI deployments — the ones that appear in Solutions Engineer interviews — use tool orchestration, not prompt stuffing. Building with MCP demonstrates fluency with how these systems actually work at scale.
+3. **Closer to production patterns.** Real enterprise AI deployments use tool orchestration, not prompt stuffing. MCP reflects how these systems actually work at scale — clean tool boundaries, independent failure modes, and room to add new data sources without touching the agent logic.
 
 4. **Claude handles missing data gracefully.** If a tool returns an error or partial data, Claude can decide to try a different tool or proceed with what it has, rather than the whole pipeline failing on a network error.
 
@@ -108,7 +108,7 @@ All subsequent API calls use session.access_token as Bearer token
 
 2. **No password management burden.** No reset flows, no breach exposure, no hashed credential storage. Supabase handles the entire auth lifecycle.
 
-3. **Real email capture.** Unlike OAuth, magic link guarantees we have a verified email address. For a job-search portfolio piece that doubles as a real product, a real user list has value.
+3. **Real email capture.** Unlike OAuth, magic link guarantees we have a verified email address. Every signed-up user is a real, verified contact — valuable as the product grows.
 
 4. **Supabase JWT works natively with the backend.** `supabase.auth.get_user(token)` validates the JWT server-side with real-time revocation support — better than local decode which can't check revocation.
 

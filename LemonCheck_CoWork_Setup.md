@@ -18,8 +18,8 @@ TECH STACK:
 - Auth + DB: Supabase (Postgres + magic link auth)
 
 PROJECT CONTEXT:
-- This is a portfolio/work sample for a Solutions Engineer job search (AV → AI transition)
-- Code quality and documentation matter as much as functionality — recruiters will review this
+- This is a portfolio/work sample demonstrating production-grade AI engineering
+- Code quality and documentation matter as much as functionality — this code will be reviewed
 - Every file should include a clear docstring or comment block explaining what it does and why
 - The /docs folder must stay updated as we build
 
@@ -378,7 +378,7 @@ lemoncheck/
 | AI Model | Claude Sonnet 4 | Best balance of speed + reasoning for structured output |
 | Integration Pattern | MCP tool orchestration | Mirrors real enterprise AI integration — better recruiter signal than direct API calls |
 | Auth | Supabase magic link | Frictionless for users, no password management burden |
-| Access Model | 1 free → email gate → 5/month | Wow moment before gate + real user list for job search |
+| Access Model | 1 free → email gate → 5/month | Wow moment before gate + real verified user list |
 | Demo Mode | `?demo=true` param | Recruiter frictionless path without compromising real funnel |
 | Frontend Deploy | Vercel | Free, instant, connects to GitHub |
 | Backend Deploy | Railway | Free tier, simple env var management, supports Python |
