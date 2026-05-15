@@ -27,7 +27,7 @@ from pathlib import Path
 
 from fastapi import APIRouter, HTTPException, status
 
-from backend.models.analysis import DealReport
+from models.analysis import DealReport
 
 logger = logging.getLogger(__name__)
 

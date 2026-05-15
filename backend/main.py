@@ -19,7 +19,7 @@ import os
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
-from backend.routers import analysis, auth, demo
+from routers import analysis, auth, demo
 
 app = FastAPI(
     title="LemonCheck API",

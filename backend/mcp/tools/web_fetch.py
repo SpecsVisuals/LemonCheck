@@ -15,7 +15,7 @@ Returns a normalized ListingData dict so the Claude agent always sees the same
 shape regardless of which site the URL came from.
 
 Usage:
-  from backend.mcp.tools.web_fetch import web_fetch
+  from mcp.tools.web_fetch import web_fetch
   result = await web_fetch("https://www.cargurus.com/Cars/...")
 """
 

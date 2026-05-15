@@ -25,7 +25,7 @@ Tool schemas follow the Anthropic tool use format:
   https://docs.anthropic.com/en/docs/tool-use
 
 Usage:
-  from backend.mcp.server import get_tool_definitions, dispatch_tool_call
+  from mcp.server import get_tool_definitions, dispatch_tool_call
 
   # In claude_agent.py enrichment loop:
   tools = get_tool_definitions()
@@ -37,10 +37,10 @@ import json
 import logging
 from typing import Any
 
-from backend.mcp.tools.web_fetch import web_fetch
-from backend.mcp.tools.vin_decode import vin_decode
-from backend.mcp.tools.search_comps import search_comps
-from backend.mcp.tools.price_lookup import price_lookup
+from mcp.tools.web_fetch import web_fetch
+from mcp.tools.vin_decode import vin_decode
+from mcp.tools.search_comps import search_comps
+from mcp.tools.price_lookup import price_lookup
 
 logger = logging.getLogger(__name__)
 

@@ -46,7 +46,7 @@ class TestWebFetch:
     @pytest.mark.asyncio
     async def test_cargurus_json_ld_extraction(self):
         """Should extract all fields from CarGurus JSON-LD structured data."""
-        from backend.mcp.tools.web_fetch import web_fetch
+        from mcp.tools.web_fetch import web_fetch
 
         html = load_fixture("cargurus_listing.html")
         mock_response = MagicMock()
@@ -75,7 +75,7 @@ class TestWebFetch:
     @pytest.mark.asyncio
     async def test_autotrader_json_ld_extraction(self):
         """Should extract all fields from AutoTrader JSON-LD structured data."""
-        from backend.mcp.tools.web_fetch import web_fetch
+        from mcp.tools.web_fetch import web_fetch
 
         html = load_fixture("autotrader_listing.html")
         mock_response = MagicMock()
@@ -102,7 +102,7 @@ class TestWebFetch:
     @pytest.mark.asyncio
     async def test_rejects_unsupported_url(self):
         """Should raise ValueError for non-CarGurus/AutoTrader URLs."""
-        from backend.mcp.tools.web_fetch import web_fetch
+        from mcp.tools.web_fetch import web_fetch
 
         with pytest.raises(ValueError, match="Unsupported listing site"):
             await web_fetch("https://www.craigslist.org/cars/123")
@@ -110,14 +110,14 @@ class TestWebFetch:
     @pytest.mark.asyncio
     async def test_rejects_empty_url(self):
         """Should raise ValueError for empty or malformed URLs."""
-        from backend.mcp.tools.web_fetch import web_fetch
+        from mcp.tools.web_fetch import web_fetch
 
         with pytest.raises(ValueError):
             await web_fetch("")
 
     def test_parse_price_formats(self):
         """Price parser should handle all common formatting variations."""
-        from backend.mcp.tools.web_fetch import _parse_price
+        from mcp.tools.web_fetch import _parse_price
 
         assert _parse_price("$18,500") == 18500
         assert _parse_price("18500") == 18500
@@ -128,7 +128,7 @@ class TestWebFetch:
 
     def test_parse_mileage_formats(self):
         """Mileage parser should handle 'mi', 'miles', and numeric inputs."""
-        from backend.mcp.tools.web_fetch import _parse_mileage
+        from mcp.tools.web_fetch import _parse_mileage
 
         assert _parse_mileage("62,345 mi") == 62345
         assert _parse_mileage("62345 miles") == 62345
@@ -137,7 +137,7 @@ class TestWebFetch:
 
     def test_parse_title_string_extracts_year_make_model(self):
         """Title parser should extract year/make/model/trim from listing titles."""
-        from backend.mcp.tools.web_fetch import _parse_title_string
+        from mcp.tools.web_fetch import _parse_title_string
 
         result = {}
         _parse_title_string("Used 2019 Honda Civic LX", result)
@@ -148,7 +148,7 @@ class TestWebFetch:
 
     def test_parse_title_string_handles_em_dash(self):
         """Title parser should stop trim extraction at em-dash separators."""
-        from backend.mcp.tools.web_fetch import _parse_title_string
+        from mcp.tools.web_fetch import _parse_title_string
 
         result = {}
         _parse_title_string("2021 Toyota Camry SE — Certified Pre-Owned", result)
@@ -156,7 +156,7 @@ class TestWebFetch:
 
     def test_detect_site(self):
         """Site detector should handle www prefix and subdomains."""
-        from backend.mcp.tools.web_fetch import _detect_site
+        from mcp.tools.web_fetch import _detect_site
 
         assert _detect_site("https://www.cargurus.com/Cars/123") == "cargurus.com"
         assert _detect_site("https://cargurus.com/Cars/123") == "cargurus.com"
@@ -173,7 +173,7 @@ class TestVinDecode:
     @pytest.mark.asyncio
     async def test_decodes_valid_vin(self):
         """Should correctly decode a Honda Civic VIN from NHTSA fixture data."""
-        from backend.mcp.tools.vin_decode import vin_decode
+        from mcp.tools.vin_decode import vin_decode
 
         nhtsa_response = load_json_fixture("nhtsa_civic_response.json")
 
@@ -204,14 +204,14 @@ class TestVinDecode:
 
     def test_rejects_short_vin(self):
         """Should raise ValueError for VINs shorter than 17 characters."""
-        from backend.mcp.tools.vin_decode import _validate_vin
+        from mcp.tools.vin_decode import _validate_vin
 
         with pytest.raises(ValueError, match="17 characters"):
             _validate_vin("1HGCM8263A12345")  # 15 chars
 
     def test_rejects_vin_with_illegal_chars(self):
         """Should raise ValueError for VINs containing I, O, or Q."""
-        from backend.mcp.tools.vin_decode import _validate_vin
+        from mcp.tools.vin_decode import _validate_vin
 
         with pytest.raises(ValueError, match="illegal characters"):
             _validate_vin("1HGCM82633AI23456")  # Contains 'I'
@@ -221,14 +221,14 @@ class TestVinDecode:
 
     def test_rejects_vin_too_long(self):
         """Should raise ValueError for VINs longer than 17 characters."""
-        from backend.mcp.tools.vin_decode import _validate_vin
+        from mcp.tools.vin_decode import _validate_vin
 
         with pytest.raises(ValueError, match="17 characters"):
             _validate_vin("1HGCM82633A1234567")  # 18 chars
 
     def test_accepts_valid_vin_formats(self):
         """Should accept uppercase and lowercase VINs (normalizes to upper)."""
-        from backend.mcp.tools.vin_decode import _validate_vin
+        from mcp.tools.vin_decode import _validate_vin
 
         # Should not raise
         _validate_vin("2HGFC2F59KH123456")
@@ -236,7 +236,7 @@ class TestVinDecode:
 
     def test_engine_string_assembly(self):
         """Engine string should combine cylinders and displacement correctly."""
-        from backend.mcp.tools.vin_decode import _parse_nhtsa_response
+        from mcp.tools.vin_decode import _parse_nhtsa_response
 
         mock_results = [
             {"Variable": "Make", "Value": "HONDA"},
@@ -251,7 +251,7 @@ class TestVinDecode:
 
     def test_handles_missing_optional_fields(self):
         """Should return None for optional fields not in NHTSA response."""
-        from backend.mcp.tools.vin_decode import _parse_nhtsa_response
+        from mcp.tools.vin_decode import _parse_nhtsa_response
 
         minimal_results = [
             {"Variable": "Make", "Value": "HONDA"},
@@ -272,7 +272,7 @@ class TestSearchComps:
     @pytest.mark.asyncio
     async def test_returns_filtered_listing_results(self):
         """Should return only results from trusted listing sites (not news/forums)."""
-        from backend.mcp.tools.search_comps import search_comps
+        from mcp.tools.search_comps import search_comps
 
         serpapi_data = load_json_fixture("serpapi_comps_response.json")
 
@@ -309,7 +309,7 @@ class TestSearchComps:
     @pytest.mark.asyncio
     async def test_returns_empty_list_when_no_api_keys(self):
         """Should return empty list (not raise) when no API keys are configured."""
-        from backend.mcp.tools.search_comps import search_comps
+        from mcp.tools.search_comps import search_comps
 
         with patch.dict("os.environ", {}, clear=True):
             # Remove both keys
@@ -323,7 +323,7 @@ class TestSearchComps:
 
     def test_extract_price_from_snippet(self):
         """Price extractor should parse common price formats from snippets."""
-        from backend.mcp.tools.search_comps import _extract_price
+        from mcp.tools.search_comps import _extract_price
 
         assert _extract_price("2019 Honda Civic LX — $15,995") == 15995
         assert _extract_price("Price: $16,800") == 16800
@@ -333,7 +333,7 @@ class TestSearchComps:
 
     def test_extract_mileage_from_snippet(self):
         """Mileage extractor should parse miles/mi/K patterns."""
-        from backend.mcp.tools.search_comps import _extract_mileage
+        from mcp.tools.search_comps import _extract_mileage
 
         assert _extract_mileage("62,345 miles") == 62345
         assert _extract_mileage("62,345 mi") == 62345
@@ -342,7 +342,7 @@ class TestSearchComps:
 
     def test_is_listing_url_filters_correctly(self):
         """Should accept trusted listing sites and reject others."""
-        from backend.mcp.tools.search_comps import _is_listing_url
+        from mcp.tools.search_comps import _is_listing_url
 
         assert _is_listing_url("https://www.cargurus.com/Cars/123") is True
         assert _is_listing_url("https://www.autotrader.com/cars/456") is True
@@ -352,7 +352,7 @@ class TestSearchComps:
 
     def test_build_query_includes_all_fields(self):
         """Query builder should include year, make, model, trim, and location."""
-        from backend.mcp.tools.search_comps import _build_query
+        from mcp.tools.search_comps import _build_query
 
         query = _build_query(2019, "Honda", "Civic", "LX", "Austin, TX")
         assert "2019" in query
@@ -370,7 +370,7 @@ class TestPriceLookup:
     @pytest.mark.asyncio
     async def test_computes_correct_median(self):
         """Should return correct median from mock comp prices."""
-        from backend.mcp.tools.price_lookup import price_lookup
+        from mcp.tools.price_lookup import price_lookup
 
         mock_comps = [
             {"price": 15000, "mileage": 60000},
@@ -393,7 +393,7 @@ class TestPriceLookup:
     @pytest.mark.asyncio
     async def test_returns_error_for_insufficient_comps(self):
         """Should return an error dict (not raise) when fewer than 2 priced comps exist."""
-        from backend.mcp.tools.price_lookup import price_lookup
+        from mcp.tools.price_lookup import price_lookup
 
         with patch(
             "backend.mcp.tools.price_lookup.search_comps",
@@ -406,7 +406,7 @@ class TestPriceLookup:
 
     def test_remove_outliers(self):
         """Outlier removal should filter extreme prices."""
-        from backend.mcp.tools.price_lookup import _remove_outliers
+        from mcp.tools.price_lookup import _remove_outliers
 
         prices = [15000, 15500, 16000, 16500, 17000, 55000]  # $55k is an outlier
         filtered = _remove_outliers(prices)
@@ -415,7 +415,7 @@ class TestPriceLookup:
 
     def test_remove_outliers_preserves_small_samples(self):
         """Outlier removal should not filter when sample is too small."""
-        from backend.mcp.tools.price_lookup import _remove_outliers
+        from mcp.tools.price_lookup import _remove_outliers
 
         prices = [15000, 55000]  # Only 2 — can't meaningfully remove outliers
         filtered = _remove_outliers(prices)
@@ -429,7 +429,7 @@ class TestPriceLookup:
         With n=10, pct=90: idx = round(0.9 * 10) = 9 → prices[9] = 28000
         This is expected — the implementation uses index-based percentiles.
         """
-        from backend.mcp.tools.price_lookup import _percentile
+        from mcp.tools.price_lookup import _percentile
 
         prices = [10000, 12000, 14000, 16000, 18000, 20000, 22000, 24000, 26000, 28000]
         assert _percentile(prices, 10) == 12000   # idx = round(10/100 * 10) = 1
@@ -445,14 +445,14 @@ class TestMcpServer:
 
     def test_get_tool_definitions_returns_four_tools(self):
         """Should return exactly 4 tool definitions."""
-        from backend.mcp.server import get_tool_definitions
+        from mcp.server import get_tool_definitions
 
         tools = get_tool_definitions()
         assert len(tools) == 4
 
     def test_tool_definitions_have_required_keys(self):
         """Each tool definition must have name, description, and input_schema."""
-        from backend.mcp.server import get_tool_definitions
+        from mcp.server import get_tool_definitions
 
         tools = get_tool_definitions()
         for tool in tools:
@@ -464,7 +464,7 @@ class TestMcpServer:
 
     def test_tool_names_match_expected(self):
         """Tool names should exactly match the expected set."""
-        from backend.mcp.server import get_tool_names
+        from mcp.server import get_tool_names
 
         names = get_tool_names()
         assert set(names) == {"web_fetch", "vin_decode", "search_comps", "price_lookup"}
@@ -472,7 +472,7 @@ class TestMcpServer:
     @pytest.mark.asyncio
     async def test_dispatch_unknown_tool_raises(self):
         """Dispatching an unknown tool name should raise ValueError."""
-        from backend.mcp.server import dispatch_tool_call
+        from mcp.server import dispatch_tool_call
 
         result_str = await dispatch_tool_call("nonexistent_tool", {})
         result = json.loads(result_str)
@@ -482,7 +482,7 @@ class TestMcpServer:
     @pytest.mark.asyncio
     async def test_dispatch_web_fetch_routes_correctly(self):
         """dispatch_tool_call('web_fetch', ...) should call the web_fetch function."""
-        from backend.mcp.server import dispatch_tool_call
+        from mcp.server import dispatch_tool_call
 
         mock_result = {
             "make": "Honda", "model": "Civic", "year": 2019,
@@ -505,7 +505,7 @@ class TestMcpServer:
     @pytest.mark.asyncio
     async def test_dispatch_wraps_tool_errors_as_json(self):
         """Tool errors should be caught and returned as JSON, not re-raised."""
-        from backend.mcp.server import dispatch_tool_call
+        from mcp.server import dispatch_tool_call
 
         with patch(
             "backend.mcp.server.web_fetch",

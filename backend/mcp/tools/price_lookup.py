@@ -27,7 +27,7 @@ Returns:
   }
 
 Usage:
-  from backend.mcp.tools.price_lookup import price_lookup
+  from mcp.tools.price_lookup import price_lookup
   range_data = await price_lookup(2019, "Honda", "Civic", "LX", 62000)
 """
 
@@ -35,7 +35,7 @@ import logging
 import statistics
 from typing import Optional
 
-from backend.mcp.tools.search_comps import search_comps
+from mcp.tools.search_comps import search_comps
 
 logger = logging.getLogger(__name__)
 

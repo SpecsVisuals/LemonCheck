@@ -24,8 +24,8 @@ Why two steps?
   actually works: research first, then assess.
 
 Usage:
-  from backend.services.claude_agent import run_analysis
-  from backend.models.analysis import AnalysisRequest
+  from services.claude_agent import run_analysis
+  from models.analysis import AnalysisRequest
 
   request = AnalysisRequest(listing_url="https://www.cargurus.com/...")
   report = await run_analysis(request)
@@ -41,8 +41,8 @@ from typing import Any
 import anthropic
 from pydantic import ValidationError
 
-from backend.models.analysis import AnalysisRequest, DealReport
-from backend.mcp.server import get_tool_definitions, dispatch_tool_call
+from models.analysis import AnalysisRequest, DealReport
+from mcp.server import get_tool_definitions, dispatch_tool_call
 
 logger = logging.getLogger(__name__)
 

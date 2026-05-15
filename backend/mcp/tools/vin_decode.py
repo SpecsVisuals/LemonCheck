@@ -28,7 +28,7 @@ Returns:
   }
 
 Usage:
-  from backend.mcp.tools.vin_decode import vin_decode
+  from mcp.tools.vin_decode import vin_decode
   result = await vin_decode("1HGCM82633A123456")
 """
 

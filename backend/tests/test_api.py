@@ -63,15 +63,15 @@ def client():
         "SUPABASE_ANON_KEY": "test-anon-key",
         "SUPABASE_SERVICE_ROLE_KEY": "test-service-key",
     }):
-        from backend.main import app
+        from main import app
         return TestClient(app, raise_server_exceptions=False)
 
 
 @pytest.fixture
 def authed_client(client):
     """TestClient with get_current_user mocked to return FAKE_USER_ID."""
-    from backend.routers.auth import get_current_user
-    from backend.main import app
+    from routers.auth import get_current_user
+    from main import app
 
     app.dependency_overrides[get_current_user] = lambda: FAKE_USER_ID
     yield client
@@ -173,7 +173,7 @@ class TestAnalyzeUsageGate:
             patch("backend.routers.analysis.increment_usage", new=AsyncMock(return_value=3)),
             patch("backend.routers.analysis.save_analysis", new=AsyncMock(return_value="uuid-123")),
         ):
-            from backend.models.analysis import DealReport
+            from models.analysis import DealReport
             mock_report = DealReport(**FAKE_REPORT)
 
             with patch("backend.routers.analysis.run_analysis", new=AsyncMock(return_value=mock_report)):
@@ -189,7 +189,7 @@ class TestAnalyzeUsageGate:
 
     def test_analyze_at_exactly_zero_usage_is_allowed(self, authed_client):
         """A user with 0 analyses this month should be allowed through."""
-        from backend.models.analysis import DealReport
+        from models.analysis import DealReport
         mock_report = DealReport(**FAKE_REPORT)
 
         with (

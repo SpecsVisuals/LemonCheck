@@ -24,7 +24,7 @@ These comps are the core data that lets Claude assess whether the analyzed
 vehicle is overpriced, underpriced, or at market rate.
 
 Usage:
-  from backend.mcp.tools.search_comps import search_comps
+  from mcp.tools.search_comps import search_comps
   comps = await search_comps(2019, "Honda", "Civic", "LX", "Austin, TX")
 """
 

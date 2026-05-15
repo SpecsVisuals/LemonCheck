@@ -29,10 +29,10 @@ from typing import Annotated
 
 from fastapi import APIRouter, Depends, HTTPException, status
 
-from backend.models.analysis import AnalysisRequest, DealReport
-from backend.routers.auth import get_current_user
-from backend.services.claude_agent import run_analysis
-from backend.services.usage_tracker import (
+from models.analysis import AnalysisRequest, DealReport
+from routers.auth import get_current_user
+from services.claude_agent import run_analysis
+from services.usage_tracker import (
     FREE_TIER_LIMIT,
     get_usage_count,
     increment_usage,

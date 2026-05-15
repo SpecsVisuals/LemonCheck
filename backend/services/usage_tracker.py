@@ -15,7 +15,7 @@ Design decisions:
   - All functions are async to match the FastAPI/asyncio stack.
 
 Usage:
-  from backend.services.usage_tracker import get_usage_count, increment_usage, FREE_TIER_LIMIT
+  from services.usage_tracker import get_usage_count, increment_usage, FREE_TIER_LIMIT
 
   count = await get_usage_count(user_id)
   if count >= FREE_TIER_LIMIT:

@@ -20,7 +20,7 @@ Why not decode the JWT locally?
   but gives us real-time revocation support without managing secrets.
 
 Usage:
-  from backend.routers.auth import get_current_user
+  from routers.auth import get_current_user
 
   @router.post("/analyze")
   async def analyze(user_id: str = Depends(get_current_user)):
