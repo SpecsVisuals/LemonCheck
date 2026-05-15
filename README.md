@@ -2,8 +2,9 @@
 
 **AI-powered used car deal analyzer. Paste a listing URL — get a full deal analysis in 30 seconds.**
 
-🔗 **Live demo:** _[coming soon — deploying to Vercel + Railway]_
-🔗 **Demo mode (no login):** _`https://lemoncheck.vercel.app?demo=true`_
+🔗 **Live app:** [lemon-check.vercel.app](https://lemon-check.vercel.app)
+🔗 **Demo mode (no login):** [lemon-check.vercel.app/analysis?demo=true](https://lemon-check.vercel.app/analysis?demo=true)
+🔗 **API:** [web-production-7ec3c5.up.railway.app](https://web-production-7ec3c5.up.railway.app/docs)
 
 ---
 
@@ -196,9 +197,9 @@ lemoncheck/
 
 ## Why This Exists
 
-LemonCheck is a portfolio project built to demonstrate AI engineering skills for a Solutions Engineer role — specifically the ability to design and build production-grade AI integrations using MCP and the Anthropic API.
+The problem it solves is real: most buyers walk into a used car purchase with a gut feeling and a CarGurus listing. The seller has run thousands of deals. LemonCheck levels that playing field.
 
-The problem it solves is real: I've watched friends overpay for cars because they didn't know how to evaluate a deal. LemonCheck is the tool I wish existed.
+It's also a demonstration of production-grade AI engineering — MCP tool orchestration, structured output, async FastAPI, and a full deploy pipeline. Read the full breakdown at the [/case-study](https://lemon-check.vercel.app/case-study) route.
 
 Read the full case study (including architectural decisions and what I'd build next) at the `/case-study` route of the live app.
 
