@@ -1,0 +1,30 @@
+# LemonCheck Backend — Python Dependencies
+#
+# Install with: pip install -r requirements.txt
+#
+# Versions are intentionally flexible (>=) where transitive dependency conflicts
+# exist between packages (e.g., httpx version ranges between supabase and anthropic).
+# Pin specific versions in your deployment environment after a successful install.
+
+# Core framework
+fastapi>=0.109.1           # Async web framework — fast, type-safe, auto-generates OpenAPI docs
+uvicorn[standard]>=0.27.0  # ASGI server for FastAPI; [standard] includes watchfiles for --reload
+
+# HTTP & scraping
+httpx>=0.26.0              # Async HTTP client — used by web_fetch MCP tool + test client
+beautifulsoup4>=4.12.3     # HTML parser — extracts listing data from CarGurus/AutoTrader pages
+lxml>=5.1.0                # Fast HTML parser backend for BeautifulSoup
+
+# AI & MCP
+anthropic>=0.23.1          # Anthropic Python SDK — Claude API + tool use
+
+# Database & auth
+supabase>=2.3.4            # Supabase Python client — auth JWT validation + DB queries
+
+# Data validation
+pydantic>=2.5.3            # Data models + validation — used everywhere
+pydantic-settings>=2.1.0   # Settings management from .env files
+
+# Testing
+pytest>=7.4.4              # Test runner
+pytest-asyncio>=0.23.3     # Async test support (needed for async FastAPI routes)

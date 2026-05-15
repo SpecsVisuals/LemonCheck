@@ -1,0 +1,11 @@
+# nixpacks.toml
+#
+# Tells Railway's Nixpacks builder how to install and start the LemonCheck backend.
+# The backend lives in /backend but imports use the repo root as the Python path,
+# so we run uvicorn from the root with "backend.main:app" — no import changes needed.
+
+[phases.install]
+cmds = ["pip install -r requirements.txt"]
+
+[start]
+cmd = "uvicorn backend.main:app --host 0.0.0.0 --port $PORT"
