@@ -1,0 +1,15 @@
+# railway.toml
+#
+# Railway deployment config for LemonCheck backend (FastAPI).
+# Railway auto-detects Python and installs requirements.txt.
+# The start command runs uvicorn on the PORT env var Railway provides.
+
+[build]
+builder = "nixpacks"
+
+[deploy]
+startCommand = "uvicorn backend.main:app --host 0.0.0.0 --port $PORT"
+healthcheckPath = "/health"
+healthcheckTimeout = 30
+restartPolicyType = "on_failure"
+restartPolicyMaxRetries = 3

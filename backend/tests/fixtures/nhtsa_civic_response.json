@@ -1,0 +1,21 @@
+{
+  "Count": 136,
+  "Message": "Results returned successfully",
+  "SearchCriteria": "VIN:2HGFC2F59KH123456",
+  "Results": [
+    { "Variable": "Make", "Value": "HONDA", "VariableId": 26 },
+    { "Variable": "Model", "Value": "Civic", "VariableId": 28 },
+    { "Variable": "Model Year", "Value": "2019", "VariableId": 29 },
+    { "Variable": "Trim", "Value": "LX", "VariableId": 38 },
+    { "Variable": "Body Class", "Value": "Sedan/Saloon", "VariableId": 5 },
+    { "Variable": "Engine Number of Cylinders", "Value": "4", "VariableId": 9 },
+    { "Variable": "Displacement (L)", "Value": "2.0", "VariableId": 13 },
+    { "Variable": "Fuel Type - Primary", "Value": "Gasoline", "VariableId": 24 },
+    { "Variable": "Drive Type", "Value": "FWD/Front-Wheel Drive", "VariableId": 15 },
+    { "Variable": "Vehicle Type", "Value": "PASSENGER CAR", "VariableId": 39 },
+    { "Variable": "Error Code", "Value": "0", "VariableId": 143 },
+    { "Variable": "Error Text", "Value": "0 - VIN decoded clean. Check Digit (9th position) is correct", "VariableId": 191 },
+    { "Variable": "Suggested VIN", "Value": "", "VariableId": 166 },
+    { "Variable": "Manufacturer Name", "Value": "HONDA OF AMERICA MFG., INC.", "VariableId": 27 }
+  ]
+}

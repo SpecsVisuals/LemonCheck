@@ -1,0 +1,44 @@
+You have been given a car listing to research. Your job in this step is DATA GATHERING ONLY — do not analyze or grade anything yet. Just collect all available information using the tools provided.
+
+INPUT: {input_description}
+
+REQUIRED TOOL SEQUENCE
+Call these tools in order. Do not skip a tool unless the required input data is unavailable.
+
+1. web_fetch(url="{listing_url}")
+   - ALWAYS call this first if a URL was provided
+   - Extract: year, make, model, trim, mileage, price, location, days_on_market, seller_type, VIN
+
+2. vin_decode(vin="<VIN from step 1 or provided VIN>")
+   - Call this if web_fetch returned a VIN, OR if a VIN was provided directly
+   - Skip only if no VIN is available at all
+   - Returns: confirmed year/make/model/trim, body_style, engine specs
+
+3. search_comps(year=<year>, make="<make>", model="<model>", trim="<trim>", location="<location>")
+   - ALWAYS call this — it is the core market data
+   - Use data from steps 1-2 to fill in the parameters
+   - If trim is unknown, pass an empty string
+   - If location is unknown, use the nearest major city you can infer, or "United States"
+
+4. price_lookup(year=<year>, make="<make>", model="<model>", trim="<trim>", mileage=<mileage>)
+   - ALWAYS call this — it produces the price range used for the grade
+   - Use data from steps 1-2 for parameters
+   - If mileage is unknown, use 0 (worst case for the buyer)
+
+RULES
+- If web_fetch fails (site blocked, timeout, etc.), try to continue with whatever data is available
+- If a tool returns an error field, note it and continue — do not retry the same call
+- Do not make up values — only use data the tools returned
+- After all tools have been called, output a plain-English summary of everything gathered, then say "ENRICHMENT COMPLETE"
+
+The summary should include:
+- Vehicle: [year make model trim]
+- Asking price: $[price]
+- Mileage: [mileage] miles ([miles/year] mi/yr for a [age]-year-old car)
+- Location: [location]
+- Days on market: [days]
+- Seller type: [dealer/private]
+- VIN decoded: [yes/no — engine, drivetrain if yes]
+- Comp listings found: [count] — price range $[low] to $[high]
+- Market median: $[median] (from price_lookup)
+- Data gaps: [any fields that were unavailable]

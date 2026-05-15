@@ -1,0 +1,36 @@
+{
+  "search_metadata": { "status": "Success" },
+  "search_parameters": { "q": "2019 Honda Civic LX for sale near Austin, TX" },
+  "organic_results": [
+    {
+      "title": "2019 Honda Civic LX — $15,995 — 58,000 miles",
+      "link": "https://www.cargurus.com/Cars/listingDetail.action?listing=123",
+      "snippet": "2019 Honda Civic LX for sale in Austin TX. 58,000 miles. $15,995. Private seller. CarGurus."
+    },
+    {
+      "title": "2019 Honda Civic LX Sedan — Austin, TX — $17,200",
+      "link": "https://www.autotrader.com/cars-for-sale/vehicledetails.xhtml?listingId=456",
+      "snippet": "Used 2019 Honda Civic LX. 71,200 miles. $17,200. Dealer certified. Austin Texas."
+    },
+    {
+      "title": "Used 2019 Honda Civic LX — 55,000 mi — $15,500",
+      "link": "https://www.cars.com/vehicledetail/789/",
+      "snippet": "2019 Honda Civic LX sedan. 55,000 miles. $15,500. Austin, TX. 1-owner."
+    },
+    {
+      "title": "2019 Honda Civic review — Is it reliable?",
+      "link": "https://www.motortrend.com/cars/honda/civic/2019/review/",
+      "snippet": "MotorTrend reviews the 2019 Honda Civic. Not a listing."
+    },
+    {
+      "title": "2019 Honda Civic LX — Clean title — $16,800 — 67k miles",
+      "link": "https://www.cargurus.com/Cars/listingDetail.action?listing=999",
+      "snippet": "2019 Honda Civic LX. 67,000 miles. $16,800. Austin TX. Clean Carfax. Dealer."
+    },
+    {
+      "title": "2019 Honda Civic LX — 79,000 miles — $14,900",
+      "link": "https://www.cars.com/vehicledetail/321/",
+      "snippet": "Higher mileage example. 79,000 miles. $14,900. San Antonio, TX."
+    }
+  ]
+}

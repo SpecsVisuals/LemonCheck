@@ -1,0 +1,337 @@
+/*
+ * global.css
+ *
+ * Global Design Tokens + Base Styles — LemonCheck
+ * -------------------------------------------------
+ * Design direction: premium but approachable. Earth-tone palette. Calm on landing.
+ * Light mode by default with full dark mode support via [data-theme="dark"] on <html>.
+ * Mobile-first — base styles target 375px, scaled up via media queries.
+ *
+ * Token structure:
+ *   Brand colors (--color-yellow, --color-green, --color-sand, --color-blue)
+ *   Semantic tokens (--color-bg, --color-surface, --color-text-primary, etc.)
+ *   Grade colors (--color-grade-a through --color-grade-f)
+ *   Animation: .lc-theme-wash for the dark/light toggle wash transition
+ */
+
+/* ── Custom Fonts ─────────────────────────────────────────────────────────── */
+
+@font-face {
+  font-family: 'BadenDisplay';
+  src: url('../../FONTS/Badeen_Display/BadeenDisplay-Regular.ttf') format('truetype');
+  font-weight: 700;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Oi';
+  src: url('../../FONTS/Oi/Oi-Regular.ttf') format('truetype');
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'BungeeHairline';
+  src: url('../../FONTS/Bungee_Hairline/BungeeHairline-Regular.ttf') format('truetype');
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'ClimateCrisis';
+  src: url('../../FONTS/Climate_Crisis/ClimateCrisis-Regular-VariableFont_YEAR.ttf') format('truetype');
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+
+
+/* ── Light Mode Tokens (default) ─────────────────────────────────────────── */
+
+:root {
+  /* Brand palette */
+  --color-yellow:  #F0C000;   /* citrus — primary accent */
+  --color-green:   #4A7A58;   /* earthy green */
+  --color-sand:    #C4A97D;   /* warm sand */
+  --color-cream:   #F5EDD8;   /* soft cream */
+  --color-blue:    #4A6FA5;   /* reserved for links + info states only */
+
+  /* Semantic surface tokens */
+  --color-bg:             #F7F5EE;  /* warm off-white page background */
+  --color-surface:        #FFFFFF;  /* card / panel background */
+  --color-surface-raised: #FFFEF9;  /* slightly elevated cards */
+  --color-border:         #E2DDD0;  /* subtle border */
+  --color-border-strong:  #C9C1AE;  /* stronger dividers */
+
+  /* Text */
+  --color-text-primary:   #1C1A14;  /* near-black, warm */
+  --color-text-secondary: #6B6455;  /* muted body */
+  --color-text-tertiary:  #9C9182;  /* placeholders / captions */
+  --color-text-inverse:   #F7F5EE;  /* text on dark surfaces */
+
+  /* Interactive */
+  --color-focus:          var(--color-yellow);
+  --color-link:           var(--color-blue);
+
+  /* Grade colors — semantic, consistent across modes */
+  --color-grade-a: #2F8A4B;  /* confident green */
+  --color-grade-b: #4A7A58;  /* earthy green (matches brand) */
+  --color-grade-c: #C49A00;  /* warm amber */
+  --color-grade-d: #C46800;  /* burnt orange */
+  --color-grade-f: #B83232;  /* deep red */
+
+  /* Grade backgrounds (light tints) */
+  --color-grade-a-bg: #E8F5ED;
+  --color-grade-b-bg: #EAF2EC;
+  --color-grade-c-bg: #FBF4DC;
+  --color-grade-d-bg: #FAF0E6;
+  --color-grade-f-bg: #FAEAEA;
+
+  /* Spacing scale */
+  --space-1:  4px;
+  --space-2:  8px;
+  --space-3: 12px;
+  --space-4: 16px;
+  --space-5: 24px;
+  --space-6: 32px;
+  --space-7: 48px;
+  --space-8: 64px;
+  --space-9: 96px;
+
+  /* Border radius */
+  --radius-sm:  4px;
+  --radius-md:  8px;
+  --radius-lg: 16px;
+  --radius-xl: 24px;
+
+  /* Shadows */
+  --shadow-sm:  0 1px 3px rgba(28, 26, 20, 0.08);
+  --shadow-md:  0 4px 12px rgba(28, 26, 20, 0.10);
+  --shadow-lg:  0 8px 32px rgba(28, 26, 20, 0.12);
+
+  /* Transitions */
+  --transition-fast:   150ms ease;
+  --transition-normal: 250ms ease;
+  --transition-slow:   400ms ease;
+
+  /* Typography */
+  --font-display: 'BadenDisplay', Georgia, serif;
+  --font-body:    'Inter', system-ui, -apple-system, sans-serif;
+  --font-mono:    'JetBrains Mono', 'Fira Code', monospace;
+
+  /* Z-index layers */
+  --z-base:    0;
+  --z-raised:  10;
+  --z-overlay: 100;
+  --z-modal:   200;
+  --z-toast:   300;
+  --z-wash:    400;  /* theme wash overlay sits above everything */
+}
+
+
+/* ── Dark Mode Tokens ────────────────────────────────────────────────────── */
+
+[data-theme="dark"] {
+  /* Semantic surface tokens */
+  --color-bg:             #16150F;  /* warm near-black */
+  --color-surface:        #1F1E16;  /* card background */
+  --color-surface-raised: #262519;  /* elevated cards */
+  --color-border:         #2E2C22;  /* subtle border */
+  --color-border-strong:  #3D3B2E;  /* stronger dividers */
+
+  /* Text */
+  --color-text-primary:   #F0EDE3;  /* warm off-white */
+  --color-text-secondary: #A09880;  /* muted */
+  --color-text-tertiary:  #706855;  /* placeholders */
+  --color-text-inverse:   #1C1A14;  /* text on light surfaces */
+
+  /* Shadows darken in dark mode */
+  --shadow-sm:  0 1px 3px rgba(0, 0, 0, 0.25);
+  --shadow-md:  0 4px 12px rgba(0, 0, 0, 0.35);
+  --shadow-lg:  0 8px 32px rgba(0, 0, 0, 0.45);
+
+  /* Grade backgrounds (dark tints) */
+  --color-grade-a-bg: #1A2E20;
+  --color-grade-b-bg: #1C2B21;
+  --color-grade-c-bg: #2A2410;
+  --color-grade-d-bg: #2A1E10;
+  --color-grade-f-bg: #2A1414;
+}
+
+
+/* ── Base Reset ──────────────────────────────────────────────────────────── */
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html {
+  font-size: 16px;
+  scroll-behavior: smooth;
+  -webkit-text-size-adjust: 100%;
+}
+
+body {
+  background-color: var(--color-bg);
+  color: var(--color-text-primary);
+  font-family: var(--font-body);
+  font-size: 1rem;
+  line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  transition: background-color var(--transition-normal),
+              color var(--transition-normal);
+}
+
+img,
+video {
+  max-width: 100%;
+  height: auto;
+  display: block;
+}
+
+a {
+  color: var(--color-link);
+  text-decoration: none;
+}
+
+a:hover {
+  text-decoration: underline;
+}
+
+button {
+  cursor: pointer;
+  font-family: inherit;
+  font-size: inherit;
+  border: none;
+  background: none;
+}
+
+input,
+textarea,
+select {
+  font-family: inherit;
+  font-size: inherit;
+}
+
+ul,
+ol {
+  list-style: none;
+}
+
+h1, h2, h3, h4, h5, h6 {
+  line-height: 1.25;
+  font-weight: 700;
+  color: var(--color-text-primary);
+}
+
+
+/* ── Layout Utilities ────────────────────────────────────────────────────── */
+
+.container {
+  width: 100%;
+  max-width: 1120px;
+  margin-inline: auto;
+  padding-inline: var(--space-5);
+}
+
+@media (min-width: 768px) {
+  .container {
+    padding-inline: var(--space-6);
+  }
+}
+
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border-width: 0;
+}
+
+
+/* ── Focus Styles ────────────────────────────────────────────────────────── */
+
+:focus-visible {
+  outline: 2px solid var(--color-focus);
+  outline-offset: 2px;
+  border-radius: var(--radius-sm);
+}
+
+:focus:not(:focus-visible) {
+  outline: none;
+}
+
+
+/* ── Theme Wash Animation ────────────────────────────────────────────────── */
+/*
+ * When toggling dark/light mode, a full-viewport overlay fades in then out,
+ * creating a "wash" effect. ThemeToggle.jsx injects a div with .lc-theme-wash,
+ * triggers it, then removes it after animation completes.
+ */
+
+.lc-theme-wash {
+  position: fixed;
+  inset: 0;
+  z-index: var(--z-wash);
+  pointer-events: none;
+  background-color: var(--color-yellow);
+  opacity: 0;
+  animation: lc-wash-out 600ms ease-in-out forwards;
+}
+
+@keyframes lc-wash-out {
+  0%   { opacity: 0; }
+  30%  { opacity: 0.18; }
+  70%  { opacity: 0.18; }
+  100% { opacity: 0; }
+}
+
+
+/* ── Grade Badge Utility ─────────────────────────────────────────────────── */
+
+.grade-badge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 800;
+  border-radius: var(--radius-md);
+  padding: var(--space-1) var(--space-3);
+}
+
+.grade-badge--a { color: var(--color-grade-a); background: var(--color-grade-a-bg); }
+.grade-badge--b { color: var(--color-grade-b); background: var(--color-grade-b-bg); }
+.grade-badge--c { color: var(--color-grade-c); background: var(--color-grade-c-bg); }
+.grade-badge--d { color: var(--color-grade-d); background: var(--color-grade-d-bg); }
+.grade-badge--f { color: var(--color-grade-f); background: var(--color-grade-f-bg); }
+
+
+/* ── Scrollbar Styling ───────────────────────────────────────────────────── */
+
+::-webkit-scrollbar {
+  width: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--color-bg);
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--color-border-strong);
+  border-radius: 3px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--color-sand);
+}

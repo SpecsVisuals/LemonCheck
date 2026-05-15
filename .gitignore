@@ -1,0 +1,25 @@
+# Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+.venv/
+venv/
+.env
+.env.local
+
+# Node
+node_modules/
+dist/
+.DS_Store
+
+# Vite
+frontend/dist/
+
+# Secrets & caches
+backend/demo_cache.json
+*.log
+
+# IDE
+.vscode/
+.idea/
+*.swp

@@ -1,0 +1,65 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "DealReport",
+  "description": "Structured output from LemonCheck Claude agent — full deal analysis",
+  "type": "object",
+  "required": ["grade", "price_delta", "price_verdict", "red_flags", "green_flags", "comps", "negotiation_points", "summary"],
+  "properties": {
+    "grade": {
+      "type": "string",
+      "enum": ["A", "B", "C", "D", "F"],
+      "description": "Overall deal grade. A=excellent, B=good, C=fair, D=overpriced, F=avoid"
+    },
+    "price_delta": {
+      "type": "integer",
+      "description": "Dollars above (positive) or below (negative) estimated market value"
+    },
+    "price_verdict": {
+      "type": "string",
+      "description": "One sentence: 'This car is priced $1,200 BELOW market for a 2019 Honda Civic LX with 45k miles.'"
+    },
+    "red_flags": {
+      "type": "array",
+      "items": { "$ref": "#/definitions/Flag" }
+    },
+    "green_flags": {
+      "type": "array",
+      "items": { "$ref": "#/definitions/Flag" }
+    },
+    "comps": {
+      "type": "array",
+      "maxItems": 5,
+      "items": { "$ref": "#/definitions/CompListing" }
+    },
+    "negotiation_points": {
+      "type": "array",
+      "items": { "type": "string" },
+      "description": "Specific talking points the buyer can use to negotiate a lower price"
+    },
+    "summary": {
+      "type": "string",
+      "description": "2-3 sentence plain-English summary of the deal for a non-expert buyer"
+    }
+  },
+  "definitions": {
+    "Flag": {
+      "type": "object",
+      "required": ["title", "description"],
+      "properties": {
+        "title": { "type": "string" },
+        "description": { "type": "string" }
+      }
+    },
+    "CompListing": {
+      "type": "object",
+      "required": ["title", "price", "url", "delta_vs_this"],
+      "properties": {
+        "title": { "type": "string" },
+        "price": { "type": "integer" },
+        "mileage": { "type": "integer" },
+        "url": { "type": "string", "format": "uri" },
+        "delta_vs_this": { "type": "integer" }
+      }
+    }
+  }
+}
