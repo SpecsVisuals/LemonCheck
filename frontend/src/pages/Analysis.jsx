@@ -30,7 +30,7 @@
  *   Scrolls to top on result so the grade is immediately visible.
  */
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { useNavigate, useSearchParams, Link } from 'react-router-dom';
 import { Logo } from '@/components/Logo';
 import { ThemeToggle } from '@/components/ThemeToggle';
@@ -50,6 +50,7 @@ export default function Analysis() {
   const [report, setReport] = useState(null);
   const [errorMsg, setErrorMsg] = useState('');
   const [upgradeOpen, setUpgradeOpen] = useState(false);
+  const hasFetched = useRef(false);
 
   const isDemo = searchParams.get('demo') === 'true';
   const listingUrl = searchParams.get('url');
@@ -58,6 +59,9 @@ export default function Analysis() {
   useEffect(() => {
     // Wait for auth to resolve before making the call (except demo)
     if (!isDemo && authLoading) return;
+    // Guard: only run the analysis once per page load
+    if (hasFetched.current) return;
+    hasFetched.current = true;
 
     let cancelled = false;
 
