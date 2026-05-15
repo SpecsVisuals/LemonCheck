@@ -81,7 +81,7 @@ export default function Analysis() {
         if (cancelled) return;
         setReport(result);
         setState('success');
-        window.scrollTo({ top: 0, behavior: 'smooth' });
+        window.scrollTo(0, 0);
 
       } catch (err) {
         if (cancelled) return;
