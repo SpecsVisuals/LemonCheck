@@ -75,7 +75,7 @@ function WordmarkRow({ height }) {
       </span>
 
       {/* Lemon-O: sits in-line with the text, sized to match cap height */}
-      <LemonMark size={fontSize * 0.88} style={{ marginTop: fontSize * 0.02 }} />
+      <LemonMark size={fontSize * 0.88} style={{ marginTop: fontSize * 0.02, marginLeft: fontSize * -0.18, marginRight: fontSize * -0.18 }} />
 
       <span style={{
         fontFamily: "'BadenDisplay', Georgia, serif",
