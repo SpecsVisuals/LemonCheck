@@ -4,12 +4,19 @@
  * Listing URL / VIN Input with Validation
  * -----------------------------------------
  * The primary input component for LemonCheck. Two input modes:
- *   - URL mode: accepts CarGurus or AutoTrader listing URLs
+ *   - URL mode: accepts any car listing URL (CarGurus, AutoTrader, Cars.com,
+ *               Facebook Marketplace, Craigslist, dealer sites, etc.)
  *   - VIN mode: accepts a 17-character Vehicle Identification Number
  *
  * Validation rules:
- *   URL: must start with https://www.cargurus.com or https://www.autotrader.com
+ *   URL: must be a valid https:// URL — domain is intentionally unrestricted
+ *        so users can paste listings from any site
  *   VIN: must be exactly 17 alphanumeric characters (no I, O, Q per VIN standard)
+ *
+ * Note on Facebook Marketplace: FB requires login to view listings and actively
+ * blocks scrapers. The backend handles this gracefully — Claude works with
+ * whatever partial data it can extract, and asks the user to provide details
+ * manually if the page is inaccessible.
  *
  * Props:
  *   onSubmit(value, mode) — called with validated input when user submits
@@ -19,17 +26,17 @@
 
 import { useState, useRef, useId } from 'react';
 
-const VALID_URL_PREFIXES = [
-  'https://www.cargurus.com',
-  'https://www.autotrader.com',
-];
-
 const VIN_REGEX = /^[A-HJ-NPR-Z0-9]{17}$/i;
 
 function validateUrl(value) {
-  if (!value.trim()) return 'Paste a CarGurus or AutoTrader listing URL';
-  const isValid = VALID_URL_PREFIXES.some(prefix => value.startsWith(prefix));
-  if (!isValid) return 'URL must be from CarGurus or AutoTrader';
+  const trimmed = value.trim();
+  if (!trimmed) return 'Paste a listing URL from any car site';
+  try {
+    const parsed = new URL(trimmed);
+    if (!['http:', 'https:'].includes(parsed.protocol)) return 'URL must start with https://';
+  } catch {
+    return 'That doesn\'t look like a valid URL — paste the full link from the listing page';
+  }
   return null;
 }
 
@@ -76,7 +83,7 @@ export function SearchInput({ onSubmit, isLoading = false, className = '' }) {
   };
 
   const placeholder = mode === 'url'
-    ? 'https://www.cargurus.com/Cars/...'
+    ? 'Paste any listing URL — CarGurus, Cars.com, dealer sites...'
     : 'e.g. 2HGFC2F59KH504164';
 
   return (
@@ -101,7 +108,7 @@ export function SearchInput({ onSubmit, isLoading = false, className = '' }) {
         <div style={styles.inputRow}>
           <div style={styles.inputWrapper}>
             <label htmlFor={inputId} className="sr-only">
-              {mode === 'url' ? 'CarGurus or AutoTrader listing URL' : '17-character VIN'}
+              {mode === 'url' ? 'Car listing URL from any site' : '17-character VIN'}
             </label>
             <input
               ref={inputRef}
@@ -141,7 +148,7 @@ export function SearchInput({ onSubmit, isLoading = false, className = '' }) {
         {!error && (
           <p style={styles.helperText}>
             {mode === 'url'
-              ? 'Paste the full listing URL from CarGurus or AutoTrader'
+              ? 'Works with CarGurus, AutoTrader, Cars.com, Edmunds, Craigslist, dealer sites, and more'
               : 'Find the VIN on the dashboard, door jamb, or listing page'}
           </p>
         )}

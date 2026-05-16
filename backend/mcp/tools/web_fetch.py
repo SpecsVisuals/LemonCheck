@@ -44,7 +44,19 @@ LISTING_DATA_KEYS = [
 
 # ── Constants ─────────────────────────────────────────────────────────────────
 
-SUPPORTED_SITES = ("cargurus.com", "autotrader.com")
+# Sites with dedicated CSS-selector extractors.
+# All other sites fall back to generic JSON-LD + meta + title parsing.
+KNOWN_SITES = (
+    "cargurus.com",
+    "autotrader.com",
+    "cars.com",
+    "craigslist.org",
+    "edmunds.com",
+    "kbb.com",
+)
+
+# Sites known to block scrapers — we still try, but log a warning.
+BLOCKED_SITES = ("facebook.com",)
 
 # Browser-like headers to reduce the chance of being blocked.
 # These mimic a Chrome browser on macOS.
@@ -69,45 +81,64 @@ FETCH_TIMEOUT_SECONDS = 15
 
 async def web_fetch(url: str) -> ListingData:
     """
-    Fetch and parse a used car listing from CarGurus or AutoTrader.
+    Fetch and parse a used car listing from any site.
+
+    Accepts URLs from CarGurus, AutoTrader, Cars.com, Craigslist, Edmunds, KBB,
+    dealer websites, and more. Falls back to generic extraction for unknown sites.
+    Facebook Marketplace is attempted but may return partial data due to auth walls.
 
     Args:
-        url: Full listing URL (CarGurus or AutoTrader)
+        url: Full listing URL from any car listing site
 
     Returns:
         ListingData dict with normalized fields. Missing fields are None.
+        Partial results are returned rather than raising — Claude handles gaps.
 
     Raises:
-        ValueError: If the URL is not from a supported site
-        httpx.HTTPError: If the fetch fails after retries
+        httpx.HTTPError: If the fetch fails completely (network error, not 403)
     """
     site = _detect_site(url)
-    if not site:
-        raise ValueError(
-            f"Unsupported listing site. Supported: {SUPPORTED_SITES}. Got: {url}"
-        )
 
-    logger.info(f"[web_fetch] Fetching {site} listing: {url}")
+    if site in BLOCKED_SITES:
+        logger.warning(f"[web_fetch] {site} blocks scrapers — attempting anyway: {url}")
+    else:
+        logger.info(f"[web_fetch] Fetching listing from {site or 'unknown site'}: {url}")
 
-    html = await _fetch_html(url)
-    soup = BeautifulSoup(html, "lxml")
-
-    # Build result by trying extraction strategies in priority order
+    # Build result skeleton
     result: ListingData = {key: None for key in LISTING_DATA_KEYS}
     result["listing_url"] = url
-    result["source_site"] = site
+    result["source_site"] = site or urlparse(url).netloc.lstrip("www.")
 
-    # Strategy 1: JSON-LD structured data (schema.org) — most reliable
+    # Attempt fetch — catch auth walls / bot blocks gracefully
+    try:
+        html = await _fetch_html(url)
+    except httpx.HTTPStatusError as e:
+        if e.response.status_code in (401, 403):
+            result["fetch_error"] = f"Page requires login or blocks scrapers (HTTP {e.response.status_code}). Partial analysis only."
+            logger.warning(f"[web_fetch] Blocked ({e.response.status_code}): {url}")
+            return result
+        raise
+
+    soup = BeautifulSoup(html, "lxml")
+
+    # Strategy 1: JSON-LD structured data (schema.org) — most reliable, works on many sites
     _extract_json_ld(soup, result)
 
     # Strategy 2: Open Graph / meta tags (fills in gaps from JSON-LD)
     _extract_meta_tags(soup, result)
 
-    # Strategy 3: Site-specific CSS selectors (last resort)
+    # Strategy 3: Site-specific CSS selectors for known DOM patterns
     if site == "cargurus.com":
         _extract_cargurus(soup, result)
     elif site == "autotrader.com":
         _extract_autotrader(soup, result)
+    elif site == "cars.com":
+        _extract_cars_com(soup, result)
+    elif site == "craigslist.org":
+        _extract_craigslist(soup, result)
+    else:
+        # Generic fallback: h1 title + common price/mileage patterns
+        _extract_generic(soup, result)
 
     # Normalize numeric fields so downstream code always gets ints
     result["price"] = _parse_price(result.get("price"))
@@ -283,13 +314,110 @@ def _extract_autotrader(soup: BeautifulSoup, result: ListingData) -> None:
             _parse_title_string(h1.get_text(strip=True), result)
 
 
+# ── Extraction: Cars.com ─────────────────────────────────────────────────────
+
+def _extract_cars_com(soup: BeautifulSoup, result: ListingData) -> None:
+    """Cars.com specific selectors. JSON-LD covers most fields; this fills gaps."""
+    if not result["price"]:
+        price_el = soup.find("span", class_=re.compile(r"price-section__price", re.I))
+        if price_el:
+            result["price"] = price_el.get_text(strip=True)
+
+    if not result["mileage"]:
+        mileage_el = soup.find("div", attrs={"data-qa": "miles"})
+        if mileage_el:
+            result["mileage"] = mileage_el.get_text(strip=True)
+
+    if not result["make"] and not result["model"]:
+        h1 = soup.find("h1", class_=re.compile(r"listing-title", re.I)) or soup.find("h1")
+        if h1:
+            _parse_title_string(h1.get_text(strip=True), result)
+
+
+# ── Extraction: Craigslist ────────────────────────────────────────────────────
+
+def _extract_craigslist(soup: BeautifulSoup, result: ListingData) -> None:
+    """
+    Craigslist has simple, stable HTML — very scrapeable.
+    Listings live under /d/ paths with consistent class names.
+    """
+    if not result["price"]:
+        price_el = soup.find("span", class_="price")
+        if price_el:
+            result["price"] = price_el.get_text(strip=True)
+
+    if not result["make"] or not result["model"]:
+        h2 = soup.find("h2", class_="postingtitle") or soup.find("title")
+        if h2:
+            _parse_title_string(h2.get_text(strip=True), result)
+
+    # Craigslist auto posts have an attribute table
+    attrs = soup.find_all("p", class_="attrgroup")
+    for group in attrs:
+        for span in group.find_all("span"):
+            text = span.get_text(strip=True).lower()
+            if "odometer" in text or "miles" in text:
+                result["mileage"] = re.sub(r"[^\d]", "", text)
+            if not result["vin"] and re.match(r"vin:\s*[a-z0-9]{17}", text, re.I):
+                result["vin"] = text.split(":")[-1].strip().upper()
+
+    if not result["location"]:
+        loc_el = soup.find("div", class_="mapaddress") or soup.find("small")
+        if loc_el:
+            result["location"] = loc_el.get_text(strip=True)
+
+    if not result["seller_type"]:
+        result["seller_type"] = "private"  # Craigslist defaults to private sellers
+
+
+# ── Extraction: Generic fallback ──────────────────────────────────────────────
+
+def _extract_generic(soup: BeautifulSoup, result: ListingData) -> None:
+    """
+    Generic extraction for dealer sites and unsupported listing pages.
+    Works on most sites that follow basic HTML conventions.
+    Relies on JSON-LD and meta tags having already run first.
+    """
+    # Try common price patterns in text
+    if not result["price"]:
+        price_el = soup.find(
+            ["span", "div", "p"],
+            class_=re.compile(r"price|asking|sale[-_]?price", re.I)
+        )
+        if price_el:
+            result["price"] = price_el.get_text(strip=True)
+
+    # Try the page h1 for year/make/model
+    if not result["make"]:
+        h1 = soup.find("h1")
+        if h1:
+            _parse_title_string(h1.get_text(strip=True), result)
+
+    # Scan all text for mileage pattern
+    if not result["mileage"]:
+        mileage_match = soup.find(string=re.compile(r"\b\d[\d,]{2,}\s*mi(?:les)?\b", re.I))
+        if mileage_match:
+            result["mileage"] = mileage_match.strip()
+
+    # Scan for VIN in visible text
+    if not result["vin"]:
+        vin_match = soup.find(string=re.compile(r"\b[A-HJ-NPR-Z0-9]{17}\b", re.I))
+        if vin_match:
+            match = re.search(r"\b([A-HJ-NPR-Z0-9]{17})\b", str(vin_match), re.I)
+            if match:
+                result["vin"] = match.group(1).upper()
+
+    logger.info(f"[web_fetch] Generic extraction complete for {result.get('source_site')}")
+
+
 # ── Helpers ───────────────────────────────────────────────────────────────────
 
 def _detect_site(url: str) -> Optional[str]:
-    """Return the normalized site name for a supported listing URL, or None."""
+    """Return the normalized site name, or None for unknown sites."""
     try:
         host = urlparse(url).netloc.lower().lstrip("www.")
-        for site in SUPPORTED_SITES:
+        all_known = KNOWN_SITES + BLOCKED_SITES
+        for site in all_known:
             if host == site or host.endswith(f".{site}"):
                 return site
     except Exception:
