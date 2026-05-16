@@ -44,7 +44,7 @@ export function Logo({ size = 'md', compact = false, className = '' }) {
   return (
     <div
       className={`lc-logo ${className}`}
-      style={{ display: 'inline-flex', flexDirection: 'column', alignItems: 'flex-start', gap: dims.gap }}
+      style={{ display: 'inline-flex', flexDirection: 'column', alignItems: 'center', gap: dims.gap }}
       aria-label="LemonCheck"
     >
       <WordmarkRow height={dims.wordmarkH} />
@@ -129,7 +129,7 @@ export function LemonMark({ size = 28, style = {}, className = '' }) {
       viewBox="0 0 40 34"
       xmlns="http://www.w3.org/2000/svg"
       aria-hidden="true"
-      style={{ display: 'inline-block', verticalAlign: 'middle', flexShrink: 0, ...style }}
+      style={{ display: 'inline-block', verticalAlign: 'middle', flexShrink: 0, transform: 'rotate(25deg)', ...style }}
       className={className}
     >
       {/* Lemon body — rotated ellipse */}

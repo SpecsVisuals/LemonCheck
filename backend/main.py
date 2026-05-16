@@ -31,14 +31,16 @@ app = FastAPI(
 # Allow the Vite dev server and Vercel deployment to call this API.
 # In production, tighten this to the exact Vercel domain.
 allowed_origins = [
-    "http://localhost:5173",     # Vite dev server
-    "http://localhost:3000",     # Alternative local
-    os.getenv("FRONTEND_URL", ""),  # Production Vercel URL (set in Railway env)
+    "http://localhost:5173",           # Vite dev server
+    "http://localhost:3000",           # Alternative local
+    "https://lemon-check.vercel.app",  # Production Vercel URL (hardcoded fallback)
+    os.getenv("FRONTEND_URL", ""),     # Production Vercel URL (set in Railway env)
 ]
 
 app.add_middleware(
     CORSMiddleware,
     allow_origins=[o for o in allowed_origins if o],
+    allow_origin_regex=r"https://lemon-check.*\.vercel\.app",  # Covers preview deploys
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
