@@ -38,7 +38,8 @@ import { DealCard } from '@/components/DealCard';
 import { LoadingStates } from '@/components/LoadingStates';
 import { useAuth } from '@/hooks/useAuth';
 import { useUsageGate } from '@/hooks/useUsageGate';
-import { getDemoResult, analyzeListingUrl, analyzeVin, ApiError } from '@/lib/api';
+import { analyzeListingUrl, analyzeVin, ApiError } from '@/lib/api';
+import { DEMO_REPORT } from '@/lib/demoData';
 
 export default function Analysis() {
   const navigate = useNavigate();
@@ -70,7 +71,9 @@ export default function Analysis() {
         let result;
 
         if (isDemo) {
-          result = await getDemoResult();
+          // Serve demo data from static import — no network call needed.
+          // Avoids Railway cold-start latency on the recruiter demo path.
+          result = DEMO_REPORT;
         } else if (!session) {
           // Not authed — redirect home
           navigate('/?auth=required');
