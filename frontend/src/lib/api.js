@@ -17,6 +17,28 @@
 
 const API_BASE = import.meta.env.VITE_API_URL ?? 'http://localhost:8000';
 
+// Real analyses run the Claude agent + 3 MCP tools — allow up to 90 seconds.
+// If Railway cold-starts, the first request can take 15-20s before the agent even begins.
+const ANALYSIS_TIMEOUT_MS = 90_000;
+
+/**
+ * Fetch with a timeout. Throws a named error if the request exceeds the limit.
+ */
+async function _fetchWithTimeout(url, options, timeoutMs) {
+  const controller = new AbortController();
+  const timer = setTimeout(() => controller.abort(), timeoutMs);
+  try {
+    return await fetch(url, { ...options, signal: controller.signal });
+  } catch (err) {
+    if (err.name === 'AbortError') {
+      throw new ApiError(504, 'The analysis took too long to respond. Railway may be waking up — wait 15 seconds and try again.', 'timeout');
+    }
+    throw err;
+  } finally {
+    clearTimeout(timer);
+  }
+}
+
 // ── Error class ───────────────────────────────────────────────────────────────
 
 /**
@@ -107,11 +129,11 @@ export async function getDemoResult() {
  * @throws {ApiError} 401 if token invalid, 402 if usage limit exceeded
  */
 export async function analyzeListingUrl(url, token) {
-  const response = await fetch(`${API_BASE}/analyze`, {
+  const response = await _fetchWithTimeout(`${API_BASE}/analyze`, {
     method: 'POST',
     headers: _authHeaders(token),
     body: JSON.stringify({ listing_url: url, vin: null }),
-  });
+  }, ANALYSIS_TIMEOUT_MS);
 
   if (!response.ok) {
     await _handleError(response);
@@ -130,11 +152,11 @@ export async function analyzeListingUrl(url, token) {
  * @throws {ApiError} 401 if token invalid, 402 if usage limit exceeded
  */
 export async function analyzeVin(vin, token) {
-  const response = await fetch(`${API_BASE}/analyze`, {
+  const response = await _fetchWithTimeout(`${API_BASE}/analyze`, {
     method: 'POST',
     headers: _authHeaders(token),
     body: JSON.stringify({ listing_url: null, vin }),
-  });
+  }, ANALYSIS_TIMEOUT_MS);
 
   if (!response.ok) {
     await _handleError(response);
