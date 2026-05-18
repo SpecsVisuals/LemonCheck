@@ -17,9 +17,10 @@
 
 const API_BASE = import.meta.env.VITE_API_URL ?? 'http://localhost:8000';
 
-// Real analyses run the Claude agent + 3 MCP tools — allow up to 90 seconds.
-// If Railway cold-starts, the first request can take 15-20s before the agent even begins.
-const ANALYSIS_TIMEOUT_MS = 90_000;
+// Real analyses run the Claude agent + MCP tools — allow up to 120 seconds.
+// Railway free tier cold-starts add 30-45s before the agent even begins;
+// the analysis itself takes ~20-40s on top of that.
+const ANALYSIS_TIMEOUT_MS = 120_000;
 
 /**
  * Fetch with a timeout. Throws a named error if the request exceeds the limit.

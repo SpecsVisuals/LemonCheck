@@ -115,6 +115,11 @@ export default function Analysis() {
             setErrorMsg("We couldn't parse this listing. Try a different URL or VIN.");
             return;
           }
+          if (err.code === 'timeout') {
+            setState('error');
+            setErrorMsg('The server took too long to respond — it may have been waking up. Hit "Try again" and it should be fast now.');
+            return;
+          }
         }
 
         setState('error');
