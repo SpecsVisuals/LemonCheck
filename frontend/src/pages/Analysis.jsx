@@ -30,7 +30,7 @@
  *   Scrolls to top on result so the grade is immediately visible.
  */
 
-import { useState, useEffect, useRef } from 'react';
+import { useState, useEffect, useRef, Component } from 'react';
 import { useNavigate, useSearchParams, Link } from 'react-router-dom';
 import { Logo } from '@/components/Logo';
 import { ThemeToggle } from '@/components/ThemeToggle';
@@ -153,7 +153,7 @@ export default function Analysis() {
                 <Link to="/" style={styles.demoBannerLink}>Try it with a real listing →</Link>
               </div>
             )}
-            <DealCard report={report} />
+            <DealCardBoundary report={report} />
             <div style={styles.ctaRow}>
               <p style={styles.ctaText}>Want to check another car?</p>
               <Link to="/" style={styles.ctaBtn}>Run another analysis</Link>
@@ -181,6 +181,45 @@ export default function Analysis() {
       {upgradeOpen && <UpgradeModal onClose={() => setUpgradeOpen(false)} />}
     </div>
   );
+}
+
+
+// ── DealCard error boundary ────────────────────────────────────────────────
+// Catches any runtime crash inside DealCard (e.g. unexpected null field from
+// the AI response) and shows a fallback instead of a blank screen.
+
+class DealCardBoundary extends Component {
+  constructor(props) {
+    super(props);
+    this.state = { crashed: false, error: null };
+  }
+
+  static getDerivedStateFromError(error) {
+    return { crashed: true, error };
+  }
+
+  componentDidCatch(error, info) {
+    console.error('[DealCardBoundary] DealCard crashed:', error, info);
+  }
+
+  render() {
+    if (this.state.crashed) {
+      return (
+        <div style={{ maxWidth: 400, margin: '0 auto', textAlign: 'center', padding: '48px 24px' }}>
+          <p style={{ fontSize: 40 }}>⚠️</p>
+          <h2 style={{ fontSize: 20, fontWeight: 700, marginBottom: 12 }}>Couldn't display the result</h2>
+          <p style={{ fontSize: 14, color: 'var(--color-text-secondary)', marginBottom: 24, lineHeight: 1.6 }}>
+            The analysis completed but the result had an unexpected format. Try again — this is usually transient.
+          </p>
+          <button onClick={() => window.location.reload()}
+            style={{ padding: '10px 24px', borderRadius: 'var(--radius-md)', background: 'var(--color-text-primary)', color: 'var(--color-bg)', fontSize: 14, fontWeight: 600, border: 'none', cursor: 'pointer' }}>
+            Try again
+          </button>
+        </div>
+      );
+    }
+    return <DealCard report={this.props.report} />;
+  }
 }
 
 

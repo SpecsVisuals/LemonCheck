@@ -49,7 +49,7 @@ logger = logging.getLogger(__name__)
 # ── Configuration ─────────────────────────────────────────────────────────────
 
 MODEL = "claude-sonnet-4-6"           # Sonnet: best balance of speed + reasoning
-MAX_TOOL_CALLS = 8                     # Safety cap on the enrichment loop
+MAX_TOOL_CALLS = 5                     # Safety cap on the enrichment loop (web_fetch + vin_decode + search_comps + price_lookup + 1 retry)
 MAX_TOKENS_ENRICHMENT = 4096          # Enough for tool calls + summary
 MAX_TOKENS_ANALYSIS = 2048            # DealReport JSON fits comfortably here
 

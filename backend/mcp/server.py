@@ -102,7 +102,10 @@ TOOL_DEFINITIONS: list[dict] = [
             "Search for comparable used car listings to establish a market price baseline. "
             "Use this after web_fetch to find what similar vehicles are selling for. "
             "Returns up to 5 listings with: title, price, mileage, url, source site. "
-            "Use trim='' if the trim level is unknown."
+            "Use trim='' if the trim level is unknown. "
+            "IMPORTANT: If this tool returns an error (no API key configured), do NOT "
+            "call it again — call price_lookup once, and if that also fails, proceed "
+            "directly to the analysis step using whatever data you have already gathered."
         ),
         "input_schema": {
             "type": "object",

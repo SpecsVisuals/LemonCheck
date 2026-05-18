@@ -81,11 +81,23 @@ async def search_comps(
     Returns:
         List of comp dicts. May be empty if no results found.
     """
-    query = _build_query(year, make, model, trim, location)
-    logger.info(f"[search_comps] Query: '{query}'")
-
     serpapi_key = os.getenv("SERPAPI_KEY")
     brave_key = os.getenv("BRAVE_SEARCH_KEY")
+
+    # Fast-fail when no API keys are configured — return a structured error dict
+    # so Claude understands this tool is unavailable (not just "no results").
+    # An empty list looks like a transient miss; a raised exception produces an
+    # error JSON that tells Claude to skip this tool and proceed to analysis.
+    if not serpapi_key and not brave_key:
+        raise RuntimeError(
+            "No search API key is configured (SERPAPI_KEY or BRAVE_SEARCH_KEY). "
+            "Comparable listings are unavailable. Do NOT call search_comps or "
+            "price_lookup again — proceed directly to the analysis step using "
+            "the listing data already gathered."
+        )
+
+    query = _build_query(year, make, model, trim, location)
+    logger.info(f"[search_comps] Query: '{query}'")
 
     # Try SerpAPI first, fall back to Brave Search
     raw_results: list[dict] = []

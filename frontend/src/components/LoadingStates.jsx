@@ -28,15 +28,16 @@
 import { useState, useEffect, useRef } from 'react';
 
 const STEPS = [
-  { message: 'Fetching listing data...', duration: 3500 },
-  { message: 'Searching comparable listings nearby...', duration: 5000 },
-  { message: 'Decoding vehicle history...', duration: 6000 },
-  { message: 'Running deal analysis...', duration: 8000 },
+  { message: 'Fetching listing data...', duration: 6000 },
+  { message: 'Searching comparable listings nearby...', duration: 10000 },
+  { message: 'Decoding vehicle history...', duration: 10000 },
+  { message: 'Running deal analysis...', duration: 14000 },
   { message: 'Almost there...', duration: Infinity },
 ];
 
-// Progress bar fills to ~90% over 25s, slows near the end
-function easeProgress(elapsed, total = 25000) {
+// Progress bar fills to ~90% over 55s, slows near the end.
+// Calibrated to match real backend time (~30–60s depending on cold start).
+function easeProgress(elapsed, total = 55000) {
   const t = Math.min(elapsed / total, 1);
   // Ease out — fast start, slow finish, caps at 0.9
   return Math.min(0.9, 1 - Math.pow(1 - t, 2.5));
@@ -114,7 +115,7 @@ export function LoadingStates({ className = '' }) {
       </div>
 
       <p style={styles.hint}>
-        Checking {Math.round(progress * 100)}% — this takes about 30 seconds
+        Checking {Math.round(progress * 100)}% — this usually takes 30–60 seconds
       </p>
     </div>
   );
