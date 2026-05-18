@@ -52,6 +52,13 @@ export default function Analysis() {
   const [errorMsg, setErrorMsg] = useState('');
   const [upgradeOpen, setUpgradeOpen] = useState(false);
   const hasFetched = useRef(false);
+  // Track actual unmount (not re-renders). Using a ref avoids the stale-closure
+  // bug where Supabase's second auth-state-change fires the effect cleanup and
+  // sets `cancelled = true` on a still-live fetch, silently swallowing the result.
+  const unmounted = useRef(false);
+  useEffect(() => {
+    return () => { unmounted.current = true; };
+  }, []);
 
   const isDemo = searchParams.get('demo') === 'true';
   const listingUrl = searchParams.get('url');
@@ -63,8 +70,6 @@ export default function Analysis() {
     // Guard: only run the analysis once per page load
     if (hasFetched.current) return;
     hasFetched.current = true;
-
-    let cancelled = false;
 
     async function run() {
       try {
@@ -85,13 +90,13 @@ export default function Analysis() {
           else { navigate('/'); return; }
         }
 
-        if (cancelled) return;
+        if (unmounted.current) return;
         setReport(result);
         setState('success');
         window.scrollTo(0, 0);
 
       } catch (err) {
-        if (cancelled) return;
+        if (unmounted.current) return;
 
         if (err instanceof ApiError) {
           if (err.status === 402) {
@@ -118,7 +123,6 @@ export default function Analysis() {
     }
 
     run();
-    return () => { cancelled = true; };
   }, [authLoading, session, isDemo, listingUrl, vin, navigate, onLimitHit]);
 
   return (
